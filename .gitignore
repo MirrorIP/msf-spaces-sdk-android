@@ -216,3 +216,5 @@ pip-log.txt
 
 #Additional
 gen/
+build-debug/
+doc/

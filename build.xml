@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="spaces-sdk-android" default="build" basedir=".">
+
+    <description>
+    	MIRROR Spaces SDK for Android
+    </description>
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <!-- load properties files -->
+    <property file="build.properties"/>
+
+    <!-- default folder location properties -->
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="debug.build.dir" value="build-debug"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="doc.dir" value="doc" />
+	<property name="libs.dir" value="libs" />
+	<property name="jar.file" value="${dist.dir}/${ant.project.name}-${project.version}.jar" />
+	<property name="debug.jar.file" value="${dist.dir}/${ant.project.name}-${project.version}-DEBUG.jar" />
+	
+    <!-- project classpath -->
+
+    <path id="project.classpath">
+        <!-- compiled classes -->
+        <pathelement location="${build.dir}" />
+        <!-- libraries -->
+        <fileset dir="${libs.dir}">
+       	 <include name="**/*.jar"/>
+      	</fileset>
+		<pathelement path="${android.jar}"/>
+    </path>
+	
+	<target name="init">
+        <mkdir dir="${build.dir}"/>
+		<mkdir dir="${debug.build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="clean" description="Delete generated folders.">
+        <delete dir="${build.dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${debug.build.dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.dir}" failonerror="false" deleteonexit="true" />
+    </target>
+	
+    <target name="prepare-resources" depends="init">
+    	<copy todir="${build.dir}" overwrite="true">
+	        <fileset dir="${src.dir}" includes="**/*" excludes="" />
+	    </copy>
+    	<copy todir="${debug.build.dir}" overwrite="true">
+	        <fileset dir="${src.dir}" includes="**/*" excludes="" />
+	    </copy>
+        <copy todir="${build.dir}" overwrite="true">
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+    </target>
+
+    <target name="compile" depends="init,prepare-resources" description="Compile project.">
+        <javac
+            srcdir="${src.dir}"
+            destdir="${build.dir}">
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+	
+	<target name="compileDebug" depends="init,prepare-resources" description="Compile project with debug information.">
+	    <javac
+	        srcdir="${src.dir}"
+	        destdir="${debug.build.dir}"
+	        debug="true"
+	        debuglevel="lines,vars,source">
+	        <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+	        <classpath refid="project.classpath" />
+	    </javac>
+	</target>
+	
+	<target name="javadoc" depends="init" description="Generate JavaDoc documentation." >
+        <echo message="Generating javadocs to directory ${doc.dir}." />
+        <delete dir="${doc.dir}" />
+        <javadoc destdir="${doc.dir}"
+        	access="protected"
+        	author="false" 
+        	doctitle="Space SDK for Java ${project.version}"
+        	windowtitle="Space SDK for Java ${project.version}"
+        	nodeprecated="false"
+        	nodeprecatedlist="false"
+        	noindex="false"
+        	nonavbar="false"
+        	notree="false"
+        	source="1.6"
+        	splitindex="true"
+        	use="true"
+        	version="true">
+            <fileset dir="${src.dir}" includes="**/*.java" excludes="**/xml/*.java"/>
+            <classpath refid="project.classpath" />
+            <link href="http://download.oracle.com/javase/6/docs/api/"/>
+            <link href="http://docs.mirror-demo.eu/spaces-sdk/api/${api.version}/"/>
+            <link href="http://www.igniterealtime.org/builds/smack/docs/3.4.0/javadoc/"/>
+            <link href="http://www.jdom.org/docs/apidocs/"/>
+        </javadoc>
+    </target>
+
+    <target name="jar" depends="compile" description="Package project.">
+        <jar destfile="${jar.file}">
+            <zipfileset dir="${build.dir}" includes="" excludes="" />
+        </jar>
+        <copy todir="${dist.dir}" overwrite="true">
+            <fileset dir="${libs.dir}" includes="*" excludes="" />
+        </copy>
+    </target>
+	
+    <target name="jarDebug" depends="compileDebug" description="Package project for debugging.">
+        <jar destfile="${debug.jar.file}">
+            <zipfileset dir="${debug.build.dir}" includes="" excludes="" />
+        </jar>
+    </target>
+	
+	<target name="build" depends="jar, jarDebug" description="Build the project.">
+    </target>
+
+    <target name="rebuild" depends="clean, build" description="Rebuilds the project.">
+    </target>
+</project>

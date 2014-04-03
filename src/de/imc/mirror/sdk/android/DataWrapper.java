@@ -287,7 +287,7 @@ public class DataWrapper {
 	/**
 	 * Saves a payload which can't be send.
 	 * @param user The user to send the payload.
-	 * @param payloadId The id of the payload which should be send.
+	 * @param id The id of the payload which should be send.
 	 * @param spaceId The id of the node to send the payload to.
 	 * @param payload The payload to send.
 	 */
