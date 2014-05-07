@@ -38,6 +38,9 @@ The SDK for Java implements the [Space SDK API][3]. Three major handlers are pro
 
 Details about the usage of the handlers are available of the SDK API documentation.
 
+Guides how to use the SDK are available on GitHub:
+https://github.com/MirrorIP/msf-spaces-sdk-android/wiki
+
 The complete API documentation for the Java SDK is available here:
 http://docs.mirror-demo.eu/spaces-sdk/android/1.3.0/
 
